@@ -408,7 +408,7 @@ def predict():
         data = request.get_json()
         file_path = data.get('file_path')
         lookback = int(data.get('lookback', 400))
-        pred_len = int(data.get('pred_len', 10))
+        pred_len = int(data.get('pred_len', 20))
         
         # Get prediction quality parameters
         temperature = float(data.get('temperature', 1.0))
