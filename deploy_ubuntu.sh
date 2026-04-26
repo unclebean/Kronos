@@ -34,13 +34,14 @@ echo "🔄 Activating virtual environment..."
 source "$VENV_DIR/bin/activate"
 
 # 5. Upgrade pip
-echo "⬆️ Upgrading pip..."
-pip install --upgrade pip
+echo "⬆️ Upgrading pip, setuptools, and wheel..."
+pip install --upgrade pip setuptools wheel
 
 # 6. Install Python Dependencies
 echo "📥 Installing dependencies from requirements.txt..."
 if [ -f "$PROJECT_DIR/requirements.txt" ]; then
-    pip install -r "$PROJECT_DIR/requirements.txt"
+    # Using -v (verbose) to prevent appearing 'stuck' during long compilations
+    pip install -v -r "$PROJECT_DIR/requirements.txt"
 else
     echo "⚠️ requirements.txt not found! Skipping..."
 fi
