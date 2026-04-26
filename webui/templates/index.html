@@ -481,6 +481,38 @@
 
                 <hr style="margin: 20px 0; border: 1px solid #e2e8f0;">
 
+                <!-- Live Data Fetch -->
+                <div class="form-group" style="background: #e6fffa; padding: 15px; border-radius: 8px; border: 1px solid #81e6d9;">
+                    <h3 style="color: #234e52; margin-bottom: 10px; font-size: 1.1rem;">🌐 Fetch Live Market Data</h3>
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <div style="flex: 2;">
+                            <label for="live-symbol" style="font-size: 0.9em; margin-bottom: 4px;">Symbol</label>
+                            <select id="live-symbol" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;">
+                                <option value="BTC/USDT">BTC/USDT</option>
+                                <option value="ETH/USDT">ETH/USDT</option>
+                                <option value="DOGE/USDT">DOGE/USDT</option>
+                                <option value="TAO/USDT">TAO/USDT</option>
+                                <option value="SOL/USDT">SOL/USDT</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="live-timeframe" style="font-size: 0.9em; margin-bottom: 4px;">Timeframe</label>
+                            <select id="live-timeframe" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;">
+                                <option value="1h">1 Hour</option>
+                                <option value="15m">15 Min</option>
+                                <option value="5m">5 Min</option>
+                                <option value="1d">1 Day</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="fetch-live-btn" class="btn btn-primary" style="background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);">
+                        ⬇️ Fetch Latest Data
+                    </button>
+                    <small class="form-text" style="color: #285e61;">Fetches latest 1000 candles from Binance and saves to local disk.</small>
+                </div>
+
+                <hr style="margin: 20px 0; border: 1px solid #e2e8f0;">
+
                 <!-- Data File Selection -->
                 <div class="form-group">
                     <label for="data-file-select">Select Data File:</label>
@@ -820,6 +852,48 @@
             } finally {
                 showLoading(false);
                 document.getElementById('load-data-btn').disabled = false;
+            }
+        }
+
+        // Fetch Live Data
+        async function fetchLiveData() {
+            const symbol = document.getElementById('live-symbol').value;
+            const timeframe = document.getElementById('live-timeframe').value;
+            
+            try {
+                showLoading(true);
+                document.getElementById('fetch-live-btn').disabled = true;
+                
+                const response = await axios.post('/api/fetch-live', {
+                    symbol: symbol,
+                    timeframe: timeframe
+                });
+                
+                if (response.data.success) {
+                    showStatus('success', response.data.message);
+                    console.log('✅ Live data fetched successfully:', response.data.file_path);
+                    
+                    // Reload data file list
+                    await loadDataFiles();
+                    
+                    // Automatically select the newly fetched file
+                    const dataFileSelect = document.getElementById('data-file-select');
+                    const expectedName = `realtime_feed_${symbol.replace('/', '_')}.csv`;
+                    for (let i = 0; i < dataFileSelect.options.length; i++) {
+                        if (dataFileSelect.options[i].text.includes(expectedName)) {
+                            dataFileSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                } else {
+                    showStatus('error', response.data.error);
+                }
+            } catch (error) {
+                console.error('❌ Live data fetch failed:', error);
+                showStatus('error', `Live data fetch failed: ${error.response?.data?.error || error.message}`);
+            } finally {
+                showLoading(false);
+                document.getElementById('fetch-live-btn').disabled = false;
             }
         }
 
@@ -1204,6 +1278,9 @@
         function setupEventListeners() {
             // Load model button
             document.getElementById('load-model-btn').addEventListener('click', loadModel);
+            
+            // Fetch live data button
+            document.getElementById('fetch-live-btn').addEventListener('click', fetchLiveData);
             
             // Load data button
             document.getElementById('load-data-btn').addEventListener('click', loadData);
