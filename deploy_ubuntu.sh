@@ -12,7 +12,7 @@ echo "🚀 Starting Kronos Deployment Pipeline..."
 
 # 1. Update system logs and install system dependencies
 echo "📦 Installing system dependencies (Python3, pip, venv)..."
-sudo apt-get update -y
+sudo apt-get update -y || true
 sudo apt-get install -y python3 python3-pip python3-venv git tmux
 
 # 2. Setup working directory
