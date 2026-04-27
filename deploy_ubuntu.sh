@@ -11,9 +11,12 @@ set -e
 echo "🚀 Starting Kronos Deployment Pipeline..."
 
 # 1. Update system logs and install system dependencies
-echo "📦 Installing system dependencies (Python3, pip, venv)..."
+echo "📦 Installing system dependencies (Python 3.12, pip, venv)..."
 sudo apt-get update -y || true
-sudo apt-get install -y python3 python3-pip python3-venv git tmux
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository ppa:deadsnakes/ppa -y || true
+sudo apt-get update -y || true
+sudo apt-get install -y python3.12 python3.12-venv python3.12-dev python3-pip git tmux
 
 # 2. Setup working directory
 # We assume the user has already cloned/copied the repo and is running the script from inside it.
@@ -24,7 +27,7 @@ echo "📂 Working directory: $PROJECT_DIR"
 VENV_DIR="$PROJECT_DIR/venv"
 if [ ! -d "$VENV_DIR" ]; then
     echo "🐍 Creating virtual environment..."
-    python3 -m venv "$VENV_DIR"
+    python3.12 -m venv "$VENV_DIR"
 else
     echo "✅ Virtual environment already exists."
 fi
