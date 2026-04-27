@@ -25,11 +25,17 @@ echo "📂 Working directory: $PROJECT_DIR"
 
 # 3. Setup Python Virtual Environment
 VENV_DIR="$PROJECT_DIR/venv"
+# If venv exists but is not python 3.12, remove it
+if [ -d "$VENV_DIR" ] && [ ! -d "$VENV_DIR/lib/python3.12" ]; then
+    echo "⚠️ Existing virtual environment is not Python 3.12. Removing it to prevent build errors..."
+    rm -rf "$VENV_DIR"
+fi
+
 if [ ! -d "$VENV_DIR" ]; then
-    echo "🐍 Creating virtual environment..."
+    echo "🐍 Creating virtual environment with Python 3.12..."
     python3.12 -m venv "$VENV_DIR"
 else
-    echo "✅ Virtual environment already exists."
+    echo "✅ Python 3.12 virtual environment already exists."
 fi
 
 # 4. Activate Virtual Environment
