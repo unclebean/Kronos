@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +36,7 @@
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .header p {
@@ -54,7 +55,7 @@
             background: white;
             border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             height: fit-content;
         }
 
@@ -132,7 +133,7 @@
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .btn:disabled {
@@ -188,7 +189,7 @@
             background: white;
             border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .chart-container h2 {
@@ -272,7 +273,7 @@
             border-radius: 50%;
             cursor: grab;
             border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             z-index: 10;
         }
 
@@ -396,8 +397,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .model-info {
@@ -427,17 +433,18 @@
             .main-content {
                 grid-template-columns: 1fr;
             }
-            
+
             .container {
                 padding: 10px;
             }
-            
+
             .header h1 {
                 font-size: 2rem;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -482,22 +489,45 @@
                 <hr style="margin: 20px 0; border: 1px solid #e2e8f0;">
 
                 <!-- Live Data Fetch -->
-                <div class="form-group" style="background: #e6fffa; padding: 15px; border-radius: 8px; border: 1px solid #81e6d9;">
+                <div class="form-group"
+                    style="background: #e6fffa; padding: 15px; border-radius: 8px; border: 1px solid #81e6d9;">
                     <h3 style="color: #234e52; margin-bottom: 10px; font-size: 1.1rem;">🌐 Fetch Live Market Data</h3>
                     <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <div style="flex: 2;">
-                            <label for="live-symbol" style="font-size: 0.9em; margin-bottom: 4px;">Symbol</label>
-                            <select id="live-symbol" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;">
-                                <option value="BTC/USDT">BTC/USDT</option>
-                                <option value="ETH/USDT">ETH/USDT</option>
-                                <option value="DOGE/USDT">DOGE/USDT</option>
-                                <option value="TAO/USDT">TAO/USDT</option>
-                                <option value="SOL/USDT">SOL/USDT</option>
+                        <div style="flex: 1;">
+                            <label for="live-market-type" style="font-size: 0.9em; margin-bottom: 4px;">Market</label>
+                            <select id="live-market-type"
+                                style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;"
+                                onchange="updateMarketType()">
+                                <option value="crypto">Crypto</option>
+                                <option value="ashare">China A-Share</option>
                             </select>
+                        </div>
+                        <div style="flex: 1.5;">
+                            <label for="live-symbol" style="font-size: 0.9em; margin-bottom: 4px;">Symbol</label>
+                            <input type="text" id="live-symbol" value="BTC/USDT"
+                                style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;"
+                                list="crypto-list">
+                            <datalist id="crypto-list">
+                                <option value="BTC/USDT"></option>
+                                <option value="ETH/USDT"></option>
+                                <option value="DOGE/USDT"></option>
+                                <option value="TAO/USDT"></option>
+                                <option value="SOL/USDT"></option>
+                            </datalist>
+                            <datalist id="ashare-list">
+                                <option value="300184">力源信息</option>
+                                <option value="002975">博杰股份</option>
+                                <option value="300475">香农芯创</option>
+                                <option value="000973">佛塑科技</option>
+                                <option value="002439">启明星辰</option>
+                                <option value="161226">国投白银</option>
+                                <option value="159303">HS医疗</option>
+                            </datalist>
                         </div>
                         <div style="flex: 1;">
                             <label for="live-timeframe" style="font-size: 0.9em; margin-bottom: 4px;">Timeframe</label>
-                            <select id="live-timeframe" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;">
+                            <select id="live-timeframe"
+                                style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;">
                                 <option value="1h">1 Hour</option>
                                 <option value="15m">15 Min</option>
                                 <option value="5m">5 Min</option>
@@ -505,10 +535,12 @@
                             </select>
                         </div>
                     </div>
-                    <button id="fetch-live-btn" class="btn btn-primary" style="background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);">
+                    <button id="fetch-live-btn" class="btn btn-primary"
+                        style="background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);">
                         ⬇️ Fetch Latest Data
                     </button>
-                    <small class="form-text" style="color: #285e61;">Fetches latest 1000 candles from Binance and saves to local disk.</small>
+                    <small class="form-text" style="color: #285e61;">Fetches latest 1000 candles from Binance and saves
+                        to local disk.</small>
                 </div>
 
                 <hr style="margin: 20px 0; border: 1px solid #e2e8f0;">
@@ -547,7 +579,7 @@
                         <span id="window-end">End: --</span>
                         <span id="window-size">Window Size: 400+20=420 data points</span>
                     </div>
-                    
+
                     <div class="time-window-slider">
                         <div class="slider-track">
                             <div class="slider-handle start-handle" id="start-handle"></div>
@@ -559,8 +591,9 @@
                             <span id="max-label">Latest</span>
                         </div>
                     </div>
-                    
-                    <small class="form-text">Drag slider to select time window position for 420 data points, green area represents fixed 400+20 data point range</small>
+
+                    <small class="form-text">Drag slider to select time window position for 420 data points, green area
+                        represents fixed 400+20 data point range</small>
                 </div>
 
                 <!-- Prediction Parameters -->
@@ -581,26 +614,32 @@
                     <label for="temperature">Prediction Temperature (T):</label>
                     <input type="range" id="temperature" value="1.0" min="0.1" max="2.0" step="0.1">
                     <span id="temperature-value">1.0</span>
-                    <small class="form-text">Controls prediction randomness, higher values make predictions more diverse, lower values make predictions more conservative</small>
+                    <small class="form-text">Controls prediction randomness, higher values make predictions more
+                        diverse, lower values make predictions more conservative</small>
                 </div>
 
                 <div class="form-group">
                     <label for="top-p">Nucleus Sampling Parameter (top_p):</label>
                     <input type="range" id="top-p" value="0.9" min="0.1" max="1.0" step="0.1">
                     <span id="top-p-value">0.9</span>
-                    <small class="form-text">Controls prediction diversity, higher values consider broader probability distributions</small>
+                    <small class="form-text">Controls prediction diversity, higher values consider broader probability
+                        distributions</small>
                 </div>
 
                 <div class="form-group">
                     <label for="sample-count">Sample Count:</label>
                     <input type="number" id="sample-count" value="1" min="1" max="5" step="1">
-                    <small class="form-text">Generate multiple prediction samples to improve quality (recommended 1-3)</small>
+                    <small class="form-text">Generate multiple prediction samples to improve quality (recommended
+                        1-3)</small>
                 </div>
 
                 <!-- Realtime Toggle -->
-                <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding: 10px; background: #e6fffa; border-radius: 8px;">
-                    <label for="realtime-toggle" style="margin-bottom: 0; display: flex; align-items: center; cursor: pointer;">
-                        <input type="checkbox" id="realtime-toggle" style="width: auto; margin-right: 10px; transform: scale(1.2);">
+                <div class="form-group"
+                    style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding: 10px; background: #e6fffa; border-radius: 8px;">
+                    <label for="realtime-toggle"
+                        style="margin-bottom: 0; display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="realtime-toggle"
+                            style="width: auto; margin-right: 10px; transform: scale(1.2);">
                         <strong>Enable Real-time Mode (Auto-Predict)</strong>
                     </label>
                     <span id="realtime-status" style="font-size: 12px; color: #718096;">Off</span>
@@ -620,7 +659,7 @@
             <div class="chart-container">
                 <h2>📈 Prediction Results Chart</h2>
                 <div id="chart"></div>
-                
+
                 <!-- Comparison Analysis -->
                 <div id="comparison-section" class="comparison-section" style="display: none;">
                     <h3>📊 Prediction vs Actual Data Comparison</h3>
@@ -628,7 +667,7 @@
                         <p><strong>Prediction Type:</strong> <span id="prediction-type">-</span></p>
                         <p><strong>Comparison Data:</strong> <span id="comparison-data">-</span></p>
                     </div>
-                    
+
                     <div class="error-stats">
                         <div class="error-stat">
                             <h4>Mean Absolute Error</h4>
@@ -646,7 +685,7 @@
                             <div class="unit">%</div>
                         </div>
                     </div>
-                    
+
                     <div class="error-details">
                         <h4>Detailed Comparison Data:</h4>
                         <div style="max-height: 300px; overflow-y: auto;">
@@ -682,26 +721,26 @@
         let modelLoaded = false;
 
         // Initialize after page loads
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initializeApp();
         });
 
         // Initialize application
         async function initializeApp() {
             console.log('🚀 Initializing Kronos Web UI...');
-            
+
             // Load available models
             await loadAvailableModels();
-            
+
             // Load data file list
             await loadDataFiles();
-            
+
             // Set up event listeners
             setupEventListeners();
-            
+
             // Initialize time slider
             initializeTimeSlider();
-            
+
             console.log('✅ Application initialization completed');
         }
 
@@ -727,7 +766,7 @@
         function populateModelSelect() {
             const modelSelect = document.getElementById('model-select');
             modelSelect.innerHTML = '<option value="">Please select model</option>';
-            
+
             Object.entries(availableModels).forEach(([key, model]) => {
                 const option = document.createElement('option');
                 option.value = key;
@@ -740,21 +779,21 @@
         async function loadModel() {
             const modelKey = document.getElementById('model-select').value;
             const device = document.getElementById('device-select').value;
-            
+
             if (!modelKey) {
                 showStatus('error', 'Please select a model to load');
                 return;
             }
-            
+
             try {
                 showLoading(true);
                 document.getElementById('load-model-btn').disabled = true;
-                
+
                 const response = await axios.post('/api/load-model', {
                     model_key: modelKey,
                     device: device
                 });
-                
+
                 if (response.data.success) {
                     modelLoaded = true;
                     showStatus('success', response.data.message);
@@ -778,7 +817,7 @@
             try {
                 const response = await axios.get('/api/model-status');
                 const status = response.data;
-                
+
                 if (status.loaded) {
                     showStatus('success', `Model loaded: ${status.current_model.name} on ${status.current_model.device}`);
                 } else if (status.available) {
@@ -796,17 +835,17 @@
             try {
                 const response = await axios.get('/api/data-files');
                 const dataFiles = response.data;
-                
+
                 const dataFileSelect = document.getElementById('data-file-select');
                 dataFileSelect.innerHTML = '<option value="">Please select data file</option>';
-                
+
                 dataFiles.forEach(file => {
                     const option = document.createElement('option');
                     option.value = file.path;
                     option.textContent = `${file.name} (${file.size})`;
                     dataFileSelect.appendChild(option);
                 });
-                
+
                 console.log('✅ Data file list loaded successfully:', dataFiles);
             } catch (error) {
                 console.error('❌ Failed to load data file list:', error);
@@ -817,31 +856,31 @@
         // Load data file
         async function loadData() {
             const filePath = document.getElementById('data-file-select').value;
-            
+
             if (!filePath) {
                 showStatus('error', 'Please select a data file to load');
                 return;
             }
-            
+
             try {
                 showLoading(true);
                 document.getElementById('load-data-btn').disabled = true;
-                
+
                 const response = await axios.post('/api/load-data', {
                     file_path: filePath
                 });
-                
+
                 if (response.data.success) {
                     currentDataFile = filePath;
                     currentDataInfo = response.data.data_info;
                     showDataInfo(response.data.data_info);
                     showStatus('success', response.data.message);
-                    
+
                     // Update prediction button status
                     if (modelLoaded) {
                         document.getElementById('predict-btn').disabled = false;
                     }
-                    
+
                     console.log('✅ Data loaded successfully:', response.data.data_info);
                 } else {
                     showStatus('error', response.data.error);
@@ -855,27 +894,46 @@
             }
         }
 
+        function updateMarketType() {
+            const marketType = document.getElementById('live-market-type').value;
+            const symbolInput = document.getElementById('live-symbol');
+            const timeframeSelect = document.getElementById('live-timeframe');
+
+            if (marketType === 'ashare') {
+                symbolInput.setAttribute('list', 'ashare-list');
+                symbolInput.value = '300184';
+                timeframeSelect.value = '1d';
+                timeframeSelect.disabled = true;
+            } else {
+                symbolInput.setAttribute('list', 'crypto-list');
+                symbolInput.value = 'BTC/USDT';
+                timeframeSelect.disabled = false;
+            }
+        }
+
         // Fetch Live Data
         async function fetchLiveData() {
+            const marketType = document.getElementById('live-market-type').value;
             const symbol = document.getElementById('live-symbol').value;
             const timeframe = document.getElementById('live-timeframe').value;
-            
+
             try {
                 showLoading(true);
                 document.getElementById('fetch-live-btn').disabled = true;
-                
+
                 const response = await axios.post('/api/fetch-live', {
+                    market_type: marketType,
                     symbol: symbol,
                     timeframe: timeframe
                 });
-                
+
                 if (response.data.success) {
                     showStatus('success', response.data.message);
                     console.log('✅ Live data fetched successfully:', response.data.file_path);
-                    
+
                     // Reload data file list
                     await loadDataFiles();
-                    
+
                     // Automatically select the newly fetched file
                     const dataFileSelect = document.getElementById('data-file-select');
                     const expectedName = `realtime_feed_${symbol.replace('/', '_')}.csv`;
@@ -906,12 +964,12 @@
             document.getElementById('data-price-range').textContent = `${dataInfo.price_range.min.toFixed(4)} - ${dataInfo.price_range.max.toFixed(4)}`;
             document.getElementById('data-timeframe').textContent = dataInfo.timeframe;
             document.getElementById('data-prediction-cols').textContent = dataInfo.prediction_columns.join(', ');
-            
+
             // Initialize time window slider
             initializeTimeWindowSlider(dataInfo);
         }
 
-                    // Time window slider related variables
+        // Time window slider related variables
         let sliderData = null;
         let isDragging = false;
         let currentHandle = null;
@@ -927,61 +985,61 @@
             const startHandle = document.getElementById('start-handle');
             const endHandle = document.getElementById('end-handle');
             const track = document.querySelector('.slider-track');
-            
+
             // Start dragging
             startHandle.addEventListener('mousedown', (e) => {
                 isDragging = true;
                 currentHandle = 'start';
                 e.preventDefault();
             });
-            
+
             endHandle.addEventListener('mousedown', (e) => {
                 isDragging = true;
                 currentHandle = 'end';
                 e.preventDefault();
             });
-            
+
             // Dragging
             document.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
-                
+
                 const rect = track.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const percentage = Math.max(0, Math.min(1, x / rect.width));
-                
+
                 if (currentHandle === 'start') {
                     updateStartHandle(percentage);
                 } else if (currentHandle === 'end') {
                     updateEndHandle(percentage);
                 }
-                
+
                 updateSliderFromHandles();
             });
-            
+
             // End dragging
             document.addEventListener('mouseup', () => {
                 isDragging = false;
                 currentHandle = null;
             });
-            
+
             // Click track to set position directly
             track.addEventListener('click', (e) => {
                 const rect = track.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const percentage = Math.max(0, Math.min(1, x / rect.width));
-                
+
                 // Determine which handle is closer to the click position
                 const startHandle = document.getElementById('start-handle');
                 const endHandle = document.getElementById('end-handle');
                 const startRect = startHandle.getBoundingClientRect();
                 const endRect = endHandle.getBoundingClientRect();
-                
+
                 if (Math.abs(x - (startRect.left - rect.left)) < Math.abs(x - (endRect.left - rect.left))) {
                     updateStartHandle(percentage);
                 } else {
                     updateEndHandle(percentage);
                 }
-                
+
                 updateSliderFromHandles();
             });
         }
@@ -990,21 +1048,21 @@
         function updateStartHandle(percentage) {
             const startHandle = document.getElementById('start-handle');
             const selection = document.getElementById('slider-selection');
-            
+
             // Fixed window size of 520 data points
             const windowSize = 520;
             const totalRows = sliderData ? sliderData.totalRows : 1000;
             const windowPercentage = windowSize / totalRows;
-            
+
             // Ensure start handle doesn't cause window to exceed data range
             if (percentage + windowPercentage > 1) {
                 percentage = 1 - windowPercentage;
             }
-            
+
             startHandle.style.left = (percentage * 100) + '%';
             selection.style.left = (percentage * 100) + '%';
             selection.style.width = (windowPercentage * 100) + '%';
-            
+
             // Automatically adjust end handle position to maintain fixed window size
             const endHandle = document.getElementById('end-handle');
             endHandle.style.left = ((percentage + windowPercentage) * 100) + '%';
@@ -1014,21 +1072,21 @@
         function updateEndHandle(percentage) {
             const endHandle = document.getElementById('end-handle');
             const selection = document.getElementById('slider-selection');
-            
+
             // Fixed window size of 520 data points
             const windowSize = 520;
             const totalRows = sliderData ? sliderData.totalRows : 1000;
             const windowPercentage = windowSize / totalRows;
-            
+
             // Ensure end handle doesn't cause window to exceed data range
             if (percentage - windowPercentage < 0) {
                 percentage = windowPercentage;
             }
-            
+
             endHandle.style.left = (percentage * 100) + '%';
             selection.style.left = ((percentage - windowPercentage) * 100) + '%';
             selection.style.width = (windowPercentage * 100) + '%';
-            
+
             // Automatically adjust start handle position to maintain fixed window size
             const startHandle = document.getElementById('start-handle');
             startHandle.style.left = ((percentage - windowPercentage) * 100) + '%';
@@ -1038,27 +1096,27 @@
         function updateSliderFromHandles() {
             const startHandle = document.getElementById('start-handle');
             const endHandle = document.getElementById('end-handle');
-            
+
             const startPercentage = parseFloat(startHandle.style.left) / 100;
             const endPercentage = parseFloat(endHandle.style.left) / 100;
-            
+
             if (!sliderData) return;
-            
+
             // Calculate selected time range
             const totalTime = sliderData.endDate.getTime() - sliderData.startDate.getTime();
             const startTime = sliderData.startDate.getTime() + (totalTime * startPercentage);
             const endTime = sliderData.startDate.getTime() + (totalTime * endPercentage);
-            
+
             const startDate = new Date(startTime);
             const endDate = new Date(endTime);
-            
+
             // Update display information
             document.getElementById('window-start').textContent = `Start: ${startDate.toLocaleDateString()}`;
             document.getElementById('window-end').textContent = `End: ${endDate.toLocaleDateString()}`;
-            
+
             // Display fixed window size
             document.getElementById('window-size').textContent = `Window Size: 400 + 20 = 420 data points (fixed)`;
-            
+
             // Input field values remain fixed
             document.getElementById('lookback').value = 400;
             document.getElementById('pred-len').value = 20;
@@ -1067,29 +1125,29 @@
         // Update slider based on input fields
         function updateSliderFromInputs() {
             if (!sliderData) return;
-            
+
             // Fixed window size: 400 + 20 = 420 data points
             const lookback = 400;
             const predLen = 20;
             const windowSize = lookback + predLen; // Fixed at 520
-            
+
             // Calculate slider position
             const totalRows = sliderData.totalRows;
-            
+
             if (windowSize > totalRows) {
                 // If window size exceeds total data amount, show error
                 showStatus('error', `Insufficient data, need at least ${windowSize} data points, currently only ${totalRows} available`);
                 return;
             }
-            
+
             // Calculate slider position (default select first half of data)
             const startPercentage = 0.1; // Start from 10%
             const endPercentage = startPercentage + (windowSize / totalRows);
-            
+
             // Update handle positions
             updateStartHandle(startPercentage);
             updateEndHandle(endPercentage);
-            
+
             // Update display information
             updateSliderFromHandles();
         }
@@ -1102,11 +1160,11 @@
                 totalRows: dataInfo.rows,
                 timeframe: dataInfo.timeframe
             };
-            
+
             // Set slider labels
             document.getElementById('min-label').textContent = dataInfo.start_date.split('T')[0];
             document.getElementById('max-label').textContent = dataInfo.end_date.split('T')[0];
-            
+
             // Initialize slider position
             updateSliderFromInputs();
         }
@@ -1117,40 +1175,40 @@
                 showStatus('error', 'Please load data file first');
                 return;
             }
-            
+
             if (!modelLoaded) {
                 showStatus('error', 'Please load model first');
                 return;
             }
-            
+
             try {
                 showLoading(true);
                 document.getElementById('predict-btn').disabled = true;
-                
+
                 const lookback = parseInt(document.getElementById('lookback').value);
                 const predLen = parseInt(document.getElementById('pred-len').value);
-                
+
                 // Get selected time range from time window slider
                 const startHandle = document.getElementById('start-handle');
                 const startPercentage = parseFloat(startHandle.style.left) / 100;
-                
+
                 if (!sliderData) {
                     showStatus('error', 'Time window slider not initialized');
                     return;
                 }
-                
+
                 // Calculate selected time range
                 const totalTime = sliderData.endDate.getTime() - sliderData.startDate.getTime();
                 const startTime = sliderData.startDate.getTime() + (totalTime * startPercentage);
                 const startDate = new Date(startTime);
-                
+
                 // Get prediction quality parameters
                 const temperature = parseFloat(document.getElementById('temperature').value);
                 const topP = parseFloat(document.getElementById('top-p').value);
                 const sampleCount = parseInt(document.getElementById('sample-count').value);
-                
+
                 const isRealtime = document.getElementById('realtime-toggle') && document.getElementById('realtime-toggle').checked;
-                
+
                 let predictionParams = {
                     file_path: currentDataFile,
                     lookback: lookback,
@@ -1159,15 +1217,15 @@
                     top_p: topP,
                     sample_count: sampleCount
                 };
-                
+
                 if (!isRealtime) {
                     predictionParams.start_date = startDate.toISOString().slice(0, 16); // Format as YYYY-MM-DDTHH:MM
                 }
-                
+
                 console.log('🚀 Starting prediction, parameters:', predictionParams);
-                
+
                 const response = await axios.post('/api/predict', predictionParams);
-                
+
                 if (response.data.success) {
                     // Display prediction results
                     displayPredictionResult(response.data);
@@ -1189,7 +1247,7 @@
             // Display chart
             const chartData = JSON.parse(result.chart);
             Plotly.newPlot('chart', chartData.data, chartData.layout);
-            
+
             // Display comparison analysis (if actual data exists)
             if (result.has_comparison) {
                 displayComparisonAnalysis(result);
@@ -1201,19 +1259,19 @@
         // Display comparison analysis
         function displayComparisonAnalysis(result) {
             document.getElementById('comparison-section').style.display = 'block';
-            
+
             // Update comparison information
             document.getElementById('prediction-type').textContent = result.prediction_type;
             document.getElementById('comparison-data').textContent = `${result.actual_data.length} actual data points`;
-            
+
             // Calculate error statistics
             const errorStats = getPredictionQuality(result.prediction_results, result.actual_data);
-            
+
             // Display error statistics
             document.getElementById('mae').textContent = errorStats.mae.toFixed(4);
             document.getElementById('rmse').textContent = errorStats.rmse.toFixed(4);
             document.getElementById('mape').textContent = errorStats.mape.toFixed(2);
-            
+
             // Fill comparison table
             fillComparisonTable(result.prediction_results, result.actual_data);
         }
@@ -1223,41 +1281,41 @@
             if (!predictions || !actuals || predictions.length === 0 || actuals.length === 0) {
                 return { mae: 0, rmse: 0, mape: 0 };
             }
-            
+
             const minLen = Math.min(predictions.length, actuals.length);
             let mae = 0, rmse = 0, mape = 0;
-            
+
             for (let i = 0; i < minLen; i++) {
                 const pred = predictions[i];
                 const act = actuals[i];
-                
+
                 // Use closing price to calculate errors
                 const error = Math.abs(pred.close - act.close);
                 const percentError = (error / act.close) * 100;
-                
+
                 mae += error;
                 rmse += error * error;
                 mape += percentError;
             }
-            
+
             mae /= minLen;
             rmse = Math.sqrt(rmse / minLen);
             mape /= minLen;
-            
+
             return { mae, rmse, mape };
         }
 
-                    // Fill comparison table
+        // Fill comparison table
         function fillComparisonTable(predictions, actuals) {
             const tbody = document.getElementById('comparison-tbody');
             tbody.innerHTML = '';
-            
+
             const minLen = Math.min(predictions.length, actuals.length);
-            
+
             for (let i = 0; i < minLen; i++) {
                 const pred = predictions[i];
                 const act = actuals[i];
-                
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${new Date(pred.timestamp).toLocaleString()}</td>
@@ -1278,37 +1336,37 @@
         function setupEventListeners() {
             // Load model button
             document.getElementById('load-model-btn').addEventListener('click', loadModel);
-            
+
             // Fetch live data button
             document.getElementById('fetch-live-btn').addEventListener('click', fetchLiveData);
-            
+
             // Load data button
             document.getElementById('load-data-btn').addEventListener('click', loadData);
-            
+
             // Prediction button
             document.getElementById('predict-btn').addEventListener('click', startPrediction);
-            
+
             // Real-time toggle
             const realtimeToggle = document.getElementById('realtime-toggle');
             if (realtimeToggle) {
-                realtimeToggle.addEventListener('change', function() {
+                realtimeToggle.addEventListener('change', function () {
                     const statusSpan = document.getElementById('realtime-status');
                     if (this.checked) {
                         statusSpan.textContent = 'Active (Updates every hour)';
                         statusSpan.style.color = '#38a169';
-                        
+
                         // Force slider to end
                         const startHandle = document.getElementById('start-handle');
                         if (startHandle) startHandle.style.left = '100%';
-                        
-                        if(currentDataFile) {
-                             startPrediction();
+
+                        if (currentDataFile) {
+                            startPrediction();
                         }
-                        
+
                         window.realtimeInterval = setInterval(() => {
                             console.log('Real-time polling tick (1 hour)...');
-                            if(currentDataFile && !document.getElementById('predict-btn').disabled) {
-                                 startPrediction();
+                            if (currentDataFile && !document.getElementById('predict-btn').disabled) {
+                                startPrediction();
                             }
                         }, 3600000); // 3,600,000 ms = 1 hour
                     } else {
@@ -1320,16 +1378,16 @@
                     }
                 });
             }
-            
+
             // Prediction quality parameter sliders
-            document.getElementById('temperature').addEventListener('input', function() {
+            document.getElementById('temperature').addEventListener('input', function () {
                 document.getElementById('temperature-value').textContent = this.value;
             });
-            
-            document.getElementById('top-p').addEventListener('input', function() {
+
+            document.getElementById('top-p').addEventListener('input', function () {
                 document.getElementById('top-p-value').textContent = this.value;
             });
-            
+
             // Update slider when lookback window size changes
             document.getElementById('lookback').addEventListener('input', updateSliderFromInputs);
             document.getElementById('pred-len').addEventListener('input', updateSliderFromInputs);
@@ -1341,7 +1399,7 @@
             statusDiv.className = `status ${type}`;
             statusDiv.textContent = message;
             statusDiv.style.display = 'block';
-            
+
             // Auto-hide
             setTimeout(() => {
                 statusDiv.style.display = 'none';
@@ -1359,4 +1417,5 @@
         }
     </script>
 </body>
+
 </html>

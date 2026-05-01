@@ -10,6 +10,7 @@ import sys
 import warnings
 import datetime
 import ccxt
+import akshare as ak
 warnings.filterwarnings('ignore')
 
 # Add project root directory to path
@@ -57,6 +58,14 @@ AVAILABLE_MODELS = {
         'description': 'Base model, provides better prediction quality'
     }
 }
+
+def get_full_symbol(symbol):
+    if symbol.startswith('6'):
+        return 'sh' + symbol
+    elif symbol.startswith('8') or symbol.startswith('4'):
+        return 'bj' + symbol
+    else:
+        return 'sz' + symbol
 
 def load_data_files():
     """Scan data directory and return available data files"""
@@ -619,46 +628,75 @@ def predict():
 
 @app.route('/api/fetch-live', methods=['POST'])
 def fetch_live_data():
-    """Fetch live data using ccxt"""
+    """Fetch live data using ccxt or akshare"""
     try:
         data = request.get_json()
+        market_type = data.get('market_type', 'crypto')
         symbol = data.get('symbol', 'DOGE/USDT')
         timeframe = data.get('timeframe', '1h')
-        limit = 1000
         
-        exchange = ccxt.binance({
-            'enableRateLimit': True,
-        })
-        
-        # Fetch OHLCV
-        ohlcv = exchange.fetch_ohlcv(symbol, timeframe, limit=limit)
-        
-        if not ohlcv:
-            return jsonify({'error': f'No data received for {symbol}'}), 400
-            
-        # Drop the last element as it represents the current incomplete candle
-        ohlcv = ohlcv[:-1]
-        
-        # Format into Pandas DataFrame
-        df = pd.DataFrame(ohlcv, columns=['timestamps', 'open', 'high', 'low', 'close', 'volume'])
-        
-        # Convert timestamp to datetime
-        df['timestamps'] = pd.to_datetime(df['timestamps'], unit='ms')
-        
-        # Save to CSV
         output_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data')
         os.makedirs(output_dir, exist_ok=True)
         
-        safe_symbol = symbol.replace('/', '_')
-        output_file = os.path.join(output_dir, f'realtime_feed_{safe_symbol}.csv')
-        
-        df.to_csv(output_file, index=False)
-        
-        return jsonify({
-            'success': True,
-            'message': f'Successfully fetched {len(df)} candles for {symbol}',
-            'file_path': output_file
-        })
+        if market_type == 'ashare':
+            # Fetch A-share data
+            full_symbol = get_full_symbol(symbol)
+            df = ak.stock_zh_a_daily(symbol=full_symbol, adjust="qfq")
+            
+            if df is None or df.empty:
+                return jsonify({'error': f'No data received for {symbol}'}), 400
+                
+            df = df.rename(columns={'date': 'timestamps'})
+            # Keep only required columns, note akshare returns lower case columns usually but let's be safe
+            available_cols = [c for c in ['timestamps', 'open', 'high', 'low', 'close', 'volume'] if c in df.columns]
+            df = df[available_cols]
+            
+            # Ensure timestamps column is datetime
+            df['timestamps'] = pd.to_datetime(df['timestamps'])
+            
+            safe_symbol = symbol.replace('/', '_')
+            output_file = os.path.join(output_dir, f'realtime_feed_{safe_symbol}.csv')
+            
+            df.to_csv(output_file, index=False)
+            
+            return jsonify({
+                'success': True,
+                'message': f'Successfully fetched {len(df)} daily candles for A-Share {symbol}',
+                'file_path': output_file
+            })
+            
+        else:
+            limit = 1000
+            
+            exchange = ccxt.binance({
+                'enableRateLimit': True,
+            })
+            
+            # Fetch OHLCV
+            ohlcv = exchange.fetch_ohlcv(symbol, timeframe, limit=limit)
+            
+            if not ohlcv:
+                return jsonify({'error': f'No data received for {symbol}'}), 400
+                
+            # Drop the last element as it represents the current incomplete candle
+            ohlcv = ohlcv[:-1]
+            
+            # Format into Pandas DataFrame
+            df = pd.DataFrame(ohlcv, columns=['timestamps', 'open', 'high', 'low', 'close', 'volume'])
+            
+            # Convert timestamp to datetime
+            df['timestamps'] = pd.to_datetime(df['timestamps'], unit='ms')
+            
+            safe_symbol = symbol.replace('/', '_')
+            output_file = os.path.join(output_dir, f'realtime_feed_{safe_symbol}.csv')
+            
+            df.to_csv(output_file, index=False)
+            
+            return jsonify({
+                'success': True,
+                'message': f'Successfully fetched {len(df)} candles for {symbol}',
+                'file_path': output_file
+            })
         
     except Exception as e:
         return jsonify({'error': f'Live data fetch failed: {str(e)}'}), 500
