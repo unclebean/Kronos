@@ -11,6 +11,7 @@ import warnings
 import datetime
 import ccxt
 import akshare as ak
+import re
 warnings.filterwarnings('ignore')
 
 # Add project root directory to path
@@ -639,15 +640,37 @@ def fetch_live_data():
         os.makedirs(output_dir, exist_ok=True)
         
         if market_type == 'ashare':
-            # Fetch A-share data
-            full_symbol = get_full_symbol(symbol)
-            df = ak.stock_zh_a_daily(symbol=full_symbol, adjust="qfq")
+            # Clean symbol (remove any sh/sz prefix if user typed it)
+            symbol_clean = re.sub(r'\D', '', symbol)
+            if not symbol_clean:
+                return jsonify({'error': f'Invalid symbol format: {symbol}'}), 400
+                
+            # Use the user's get_full_symbol function
+            full_symbol = get_full_symbol(symbol_clean)
+            
+            # Determine if it's an ETF or Stock based on the first digit
+            is_etf = symbol_clean.startswith(('1', '5'))
+            
+            try:
+                if is_etf:
+                    # Fetch ETF data using Sina API
+                    df = ak.fund_etf_hist_sina(symbol=full_symbol)
+                else:
+                    # Fetch Stock data using Sina API
+                    df = ak.stock_zh_a_daily(symbol=full_symbol, adjust="qfq")
+            except Exception as e:
+                if "No value to decode" in str(e):
+                    return jsonify({'error': f'Sina API blocked the request or returned empty data for {full_symbol}. This often happens on cloud IPs.'}), 400
+                return jsonify({'error': f'Failed to fetch data for {symbol}: {str(e)}'}), 400
             
             if df is None or df.empty:
                 return jsonify({'error': f'No data received for {symbol}'}), 400
                 
-            df = df.rename(columns={'date': 'timestamps'})
-            # Keep only required columns, note akshare returns lower case columns usually but let's be safe
+            # Sina API returns 'date', rename to 'timestamps'
+            if 'date' in df.columns:
+                df = df.rename(columns={'date': 'timestamps'})
+            
+            # Keep only required columns
             available_cols = [c for c in ['timestamps', 'open', 'high', 'low', 'close', 'volume'] if c in df.columns]
             df = df[available_cols]
             
