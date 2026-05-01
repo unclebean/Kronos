@@ -226,11 +226,11 @@ def create_prediction_chart(df, pred_df, lookback, pred_len, actual_df=None, his
     
     # Add historical data (candlestick chart)
     fig.add_trace(go.Candlestick(
-        x=historical_df['timestamps'] if 'timestamps' in historical_df.columns else historical_df.index,
-        open=historical_df['open'],
-        high=historical_df['high'],
-        low=historical_df['low'],
-        close=historical_df['close'],
+        x=(historical_df['timestamps'].tolist() if 'timestamps' in historical_df.columns else historical_df.index.tolist()),
+        open=historical_df['open'].tolist(),
+        high=historical_df['high'].tolist(),
+        low=historical_df['low'].tolist(),
+        close=historical_df['close'].tolist(),
         name='Historical Data (400 data points)',
         increasing_line_color='#26A69A',
         decreasing_line_color='#EF5350'
@@ -254,11 +254,11 @@ def create_prediction_chart(df, pred_df, lookback, pred_len, actual_df=None, his
             pred_timestamps = range(len(historical_df), len(historical_df) + len(pred_df))
         
         fig.add_trace(go.Candlestick(
-            x=pred_timestamps,
-            open=pred_df['open'],
-            high=pred_df['high'],
-            low=pred_df['low'],
-            close=pred_df['close'],
+            x=pred_timestamps.tolist() if hasattr(pred_timestamps, 'tolist') else list(pred_timestamps),
+            open=pred_df['open'].tolist(),
+            high=pred_df['high'].tolist(),
+            low=pred_df['low'].tolist(),
+            close=pred_df['close'].tolist(),
             name=f'Prediction Data ({len(pred_df)} data points)',
             increasing_line_color='lightblue',
             decreasing_line_color='plum'
@@ -287,11 +287,11 @@ def create_prediction_chart(df, pred_df, lookback, pred_len, actual_df=None, his
             actual_timestamps = range(len(historical_df), len(historical_df) + len(actual_df))
         
         fig.add_trace(go.Candlestick(
-            x=actual_timestamps,
-            open=actual_df['open'],
-            high=actual_df['high'],
-            low=actual_df['low'],
-            close=actual_df['close'],
+            x=actual_timestamps.tolist() if hasattr(actual_timestamps, 'tolist') else list(actual_timestamps),
+            open=actual_df['open'].tolist(),
+            high=actual_df['high'].tolist(),
+            low=actual_df['low'].tolist(),
+            close=actual_df['close'].tolist(),
             name=f'Actual Data ({len(actual_df)} data points)',
             increasing_line_color='#FF9800',
             decreasing_line_color='#F44336'
