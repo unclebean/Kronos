@@ -504,25 +504,13 @@
                         </div>
                         <div style="flex: 1.5;">
                             <label for="live-symbol" style="font-size: 0.9em; margin-bottom: 4px;">Symbol</label>
-                            <input type="text" id="live-symbol" value="BTC/USDT"
-                                style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;"
-                                list="crypto-list">
-                            <datalist id="crypto-list">
-                                <option value="BTC/USDT"></option>
-                                <option value="ETH/USDT"></option>
-                                <option value="DOGE/USDT"></option>
-                                <option value="TAO/USDT"></option>
-                                <option value="SOL/USDT"></option>
-                            </datalist>
-                            <datalist id="ashare-list">
-                                <option value="300184">力源信息</option>
-                                <option value="002975">博杰股份</option>
-                                <option value="300475">香农芯创</option>
-                                <option value="000973">佛塑科技</option>
-                                <option value="002439">启明星辰</option>
-                                <option value="161226">国投白银</option>
-                                <option value="159303">HS医疗</option>
-                            </datalist>
+                            <select id="live-symbol" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;">
+                                <option value="BTC/USDT">BTC/USDT</option>
+                                <option value="ETH/USDT">ETH/USDT</option>
+                                <option value="DOGE/USDT">DOGE/USDT</option>
+                                <option value="TAO/USDT">TAO/USDT</option>
+                                <option value="SOL/USDT">SOL/USDT</option>
+                            </select>
                         </div>
                         <div style="flex: 1;">
                             <label for="live-timeframe" style="font-size: 0.9em; margin-bottom: 4px;">Timeframe</label>
@@ -896,17 +884,44 @@
 
         function updateMarketType() {
             const marketType = document.getElementById('live-market-type').value;
-            const symbolInput = document.getElementById('live-symbol');
+            const symbolSelect = document.getElementById('live-symbol');
             const timeframeSelect = document.getElementById('live-timeframe');
 
+            // Clear current options
+            symbolSelect.innerHTML = '';
+
             if (marketType === 'ashare') {
-                symbolInput.setAttribute('list', 'ashare-list');
-                symbolInput.value = '300184';
+                const ashareOptions = [
+                    { value: "300184", text: "力源信息" },
+                    { value: "002975", text: "博杰股份" },
+                    { value: "300475", text: "香农芯创" },
+                    { value: "000973", text: "佛塑科技" },
+                    { value: "002439", text: "启明星辰" },
+                    { value: "161226", text: "国投白银" },
+                    { value: "159303", text: "HS医疗" }
+                ];
+                
+                ashareOptions.forEach(opt => {
+                    const el = document.createElement('option');
+                    el.value = opt.value;
+                    el.textContent = `${opt.value} - ${opt.text}`;
+                    symbolSelect.appendChild(el);
+                });
+                
                 timeframeSelect.value = '1d';
                 timeframeSelect.disabled = true;
             } else {
-                symbolInput.setAttribute('list', 'crypto-list');
-                symbolInput.value = 'BTC/USDT';
+                const cryptoOptions = [
+                    "BTC/USDT", "ETH/USDT", "DOGE/USDT", "TAO/USDT", "SOL/USDT"
+                ];
+                
+                cryptoOptions.forEach(val => {
+                    const el = document.createElement('option');
+                    el.value = val;
+                    el.textContent = val;
+                    symbolSelect.appendChild(el);
+                });
+                
                 timeframeSelect.disabled = false;
             }
         }
