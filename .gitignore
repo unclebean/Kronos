@@ -78,3 +78,5 @@ tmp/
 # App logs and predictions
 script_log.txt
 prediction_*.json
+
+# Data files
