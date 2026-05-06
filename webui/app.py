@@ -11,6 +11,7 @@ import warnings
 import datetime
 import ccxt
 import akshare as ak
+import yfinance as yf
 import re
 warnings.filterwarnings('ignore')
 
@@ -688,6 +689,49 @@ def fetch_live_data():
                 'file_path': output_file
             })
             
+        elif market_type == 'equity':
+            # US Equity using yfinance
+            try:
+                ticker = yf.Ticker(symbol)
+                # For equity, default to 1h if not specified or for better resolution
+                # But let the user specify timeframe
+                df = ticker.history(period='2y', interval=timeframe)
+                
+                if df is None or df.empty:
+                    return jsonify({'error': f'No data received for US Equity {symbol}'}), 400
+                
+                df = df.reset_index()
+                # yfinance returns 'Datetime' or 'Date'
+                if 'Datetime' in df.columns:
+                    df = df.rename(columns={'Datetime': 'timestamps'})
+                elif 'Date' in df.columns:
+                    df = df.rename(columns={'Date': 'timestamps'})
+                
+                # Lowercase columns
+                df.columns = [c.lower() for c in df.columns]
+                
+                # Ensure timestamps column is datetime and naive
+                df['timestamps'] = pd.to_datetime(df['timestamps'])
+                if df['timestamps'].dt.tz is not None:
+                    df['timestamps'] = df['timestamps'].dt.tz_localize(None)
+                
+                # Keep required columns
+                required_cols = ['timestamps', 'open', 'high', 'low', 'close', 'volume']
+                df = df[required_cols]
+                
+                safe_symbol = symbol.replace('/', '_')
+                output_file = os.path.join(output_dir, f'realtime_feed_{safe_symbol}.csv')
+                
+                df.to_csv(output_file, index=False)
+                
+                return jsonify({
+                    'success': True,
+                    'message': f'Successfully fetched {len(df)} candles for US Equity {symbol}',
+                    'file_path': output_file
+                })
+            except Exception as e:
+                return jsonify({'error': f'Failed to fetch US Equity data for {symbol}: {str(e)}'}), 400
+
         else:
             limit = 1000
             

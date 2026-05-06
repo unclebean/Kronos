@@ -500,11 +500,13 @@
                                 onchange="updateMarketType()">
                                 <option value="crypto">Crypto</option>
                                 <option value="ashare">China A-Share</option>
+                                <option value="equity">US Equity</option>
                             </select>
                         </div>
                         <div style="flex: 1.5;">
                             <label for="live-symbol" style="font-size: 0.9em; margin-bottom: 4px;">Symbol</label>
-                            <select id="live-symbol" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;">
+                            <select id="live-symbol"
+                                style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px;">
                                 <option value="BTC/USDT">BTC/USDT</option>
                                 <option value="ETH/USDT">ETH/USDT</option>
                                 <option value="DOGE/USDT">DOGE/USDT</option>
@@ -900,28 +902,42 @@
                     { value: "161226", text: "国投白银" },
                     { value: "159303", text: "HS医疗" }
                 ];
-                
+
                 ashareOptions.forEach(opt => {
                     const el = document.createElement('option');
                     el.value = opt.value;
                     el.textContent = `${opt.value} - ${opt.text}`;
                     symbolSelect.appendChild(el);
                 });
-                
+
                 timeframeSelect.value = '1d';
                 timeframeSelect.disabled = true;
+            } else if (marketType === 'equity') {
+                const equityOptions = [
+                    "AAPL", "NVDA", "MSFT", "TSLA", "META", "AMZN", "GOOGL", "SPY", "QQQ", "COIN"
+                ];
+
+                equityOptions.forEach(val => {
+                    const el = document.createElement('option');
+                    el.value = val;
+                    el.textContent = val;
+                    symbolSelect.appendChild(el);
+                });
+
+                timeframeSelect.disabled = false;
+                timeframeSelect.value = '1h';
             } else {
                 const cryptoOptions = [
                     "BTC/USDT", "ETH/USDT", "DOGE/USDT", "TAO/USDT", "SOL/USDT"
                 ];
-                
+
                 cryptoOptions.forEach(val => {
                     const el = document.createElement('option');
                     el.value = val;
                     el.textContent = val;
                     symbolSelect.appendChild(el);
                 });
-                
+
                 timeframeSelect.disabled = false;
             }
         }
