@@ -80,3 +80,4 @@ script_log.txt
 prediction_*.json
 
 # Data files
+*csv
